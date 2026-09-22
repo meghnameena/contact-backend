@@ -7,7 +7,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 router.post("/", async (req, res) => {
     try {
-        const { name, email, phone, subject, message } = req.body;
+        const { name, email, phone, subject, message, locationUrl } = req.body;
 
         if (!name || !email || !phone || !subject || !message) {
             return res.status(400).json({
@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
             subject: `New Contact Form: ${subject}`,
             html: `
                 <h2>New Contact Form Submission</h2>
-
+                
                 <p><strong>Name:</strong> ${name}</p>
                 <p><strong>Email:</strong> ${email}</p>
                 <p><strong>Phone:</strong> ${phone}</p>
@@ -30,6 +30,14 @@ router.post("/", async (req, res) => {
 
                 <h3>Message</h3>
                 <p>${message}</p>
+                ${locationUrl ? `
+                <h3>📍 Customer Location</h3>
+                <p>
+                    <a href="${locationUrl}" target="_blank">
+                        Open Customer Location in Google Maps
+                    </a>
+                </p>
+            ` : ""}
             `
         });
 
